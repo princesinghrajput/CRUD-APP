@@ -42,28 +42,28 @@ const UpdateUser = () => {
   };
 
   return (
-    <div>
-      <div className='d-flex vh-100 bg-primary justify-content-center align-item-center'>
-        <div className='w-50 bg-white rounded p-3'>
-          <form onSubmit={handleUpdate}>
-            <h1>Update User</h1>
-            <div className='mb-2'>
-              <label>Name</label>
-              <input type='text' className='form-control' placeholder='Enter Name' value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className='mb-2'>
-              <label>Email</label>
-              <input type='text' className='form-control' placeholder='Enter Email' value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className='mb-2'>
-              <label>Age</label>
-              <input type='text' className='form-control' placeholder='Enter Age' value={age} onChange={(e) => setAge(e.target.value)} />
-            </div>
-            <button type='submit' className='btn btn-success'>
-              Update
-            </button>
-          </form>
-        </div>
+    <div className='d-flex vh-100 bg-gradient-primary justify-content-center align-item-center'>
+      <div className='w-50 bg-white rounded p-5 shadow-lg'>
+        <form onSubmit={handleUpdate}>
+          <h1 className='mb-4 text-center text-uppercase text-primary' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '2rem', fontWeight: 'bold' }}>
+            Update User 🔃👤
+          </h1>
+          <div className='mb-4'>
+            <label className='text-primary' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem' }}>Name</label>
+            <input type='text' className='form-control' placeholder='Enter Name' value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div className='mb-4'>
+            <label className='text-primary' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem' }}>Email</label>
+            <input type='text' className='form-control' placeholder='Enter Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div className='mb-4'>
+            <label className='text-primary' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem' }}>Age</label>
+            <input type='text' className='form-control' placeholder='Enter Age' value={age} onChange={(e) => setAge(e.target.value)} />
+          </div>
+          <button type='submit' className='btn btn-success w-100' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1.2rem' }}>
+            Update User
+          </button>
+        </form>
       </div>
     </div>
   );

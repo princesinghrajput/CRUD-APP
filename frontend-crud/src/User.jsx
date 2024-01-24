@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUsers, deleteUser } from './api';
 import DeleteModal from './DeleteModal';
+import MessagePopup from './MessagePopup';
 
 const User = () => {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    console.log("Effect is running");
     const fetchUsers = async () => {
       try {
-        
         const response = await getUsers();
         setUsers(response.data);
       } catch (error) {
@@ -33,30 +34,42 @@ const User = () => {
     setSelectedUserId(null);
   };
 
+  const showMessagePopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+
+    setTimeout(() => {
+      setShowPopup(false);
+      setPopupMessage('');
+    }, 3000);
+  };
+
   const handleConfirmDelete = async () => {
     try {
       if (selectedUserId) {
         await deleteUser(selectedUserId);
         console.log("User deleted successfully");
-  
-        // Update the users state by filtering out the deleted user
+
+        showMessagePopup('User deleted successfully');
+
         setUsers((prevUsers) => prevUsers.filter((user) => user._id !== selectedUserId));
       }
     } catch (error) {
       console.error(error);
+      showMessagePopup("Error deleting user");
     } finally {
       setSelectedUserId(null);
       setShowModal(false);
     }
   };
-  
 
   return (
-    <div className='d-flex vh-100 bg-primary justify-content-center align-item-center'>
-      <div className='w-500 bg-white rounded p-3'>
-        <Link to="/create" className="btn btn-success">Add+</Link>
-        <table className="table">
-          <thead>
+    <div className='d-flex vh-100 bg-light justify-content-center align-items-center'>
+      <div className='w-75 bg-white rounded p-4 shadow'>
+        <h1 className='text-center mb-4' style={{ fontFamily: 'Poppins, sans-serif', color: '#343a40' }}>User Management</h1>
+        <Link to="/create" className="btn btn-success mb-3" style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem' }}>Add User</Link>
+        <table className="table table-bordered table-hover">
+          <thead className="thead-light">
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Email</th>
@@ -71,8 +84,8 @@ const User = () => {
                 <td>{user.email}</td>
                 <td>{user.age}</td>
                 <td>
-                  <Link to={`/update/${user._id}`} className="btn btn-success">Update</Link>
-                  <button className="btn btn-danger" onClick={() => handleDelete(user._id)}>Delete</button>
+                  <Link to={`/update/${user._id}`} className="btn btn-success mr-2 " style={{ fontFamily: 'Poppins, sans-serif', fontSize: '0.9rem' }}>Update</Link>
+                  <button className="btn btn-danger" onClick={() => handleDelete(user._id)} style={{ fontFamily: 'Poppins, sans-serif', fontSize: '0.9rem' }}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -81,6 +94,7 @@ const User = () => {
       </div>
 
       <DeleteModal show={showModal} handleClose={handleCloseModal} handleDelete={handleConfirmDelete} />
+      <MessagePopup message={popupMessage} show={showPopup} onClose={() => setShowPopup(false)} />
     </div>
   );
 };
