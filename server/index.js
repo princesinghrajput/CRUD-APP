@@ -35,12 +35,13 @@ app.put('/updateUser/:id', (req, res) => {
   
 
 
-app.delete('/deleteUser/:id', (req, res) => {
+  app.delete('/deleteUser/:id', (req, res) => {
     const id = req.params.id;
-    UserModel.findByIdAndDelete({_id:id})
-     .then(res => res.json(res))
-     .catch(err => console.log(err));
-})
+    UserModel.findByIdAndDelete({_id: id})
+        .then(result => res.json(result))
+        .catch(err => console.log(err));
+});
+
 app.post("/createUser", (req, res)=>{
     UserModel.create(req.body)
     .then(users=>res.json(users))
