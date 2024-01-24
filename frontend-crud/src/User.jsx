@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { getUsers, deleteUser } from './api';
 import DeleteModal from './DeleteModal';
 
 const User = () => {
@@ -9,34 +9,42 @@ const User = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/")
-      .then(result => setUsers(result.data))
-      .catch(err => console.log(err))
-  }, [])
+    const fetchUsers = async () => {
+      try {
+        const response = await getUsers();
+        setUsers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleDelete = (id) => {
     setSelectedUserId(id);
     setShowModal(true);
-  }
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedUserId(null);
-  }
+  };
 
-  const handleConfirmDelete = () => {
-    if (selectedUserId) {
-      axios.delete(`http://localhost:8000/deleteUser/${selectedUserId}`)
-        .then(result => {
-          console.log(result);
-          window.location.reload();
-        })
-        .catch(err => console.log(err));
-
+  const handleConfirmDelete = async () => {
+    try {
+      if (selectedUserId) {
+        await deleteUser(selectedUserId);
+        console.log("User deleted successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
       setSelectedUserId(null);
       setShowModal(false);
     }
-  }
+  };
 
   return (
     <div className='d-flex vh-100 bg-primary justify-content-center align-item-center'>
@@ -52,19 +60,17 @@ const User = () => {
             </tr>
           </thead>
           <tbody>
-            {
-              users.map((user) => (
-                <tr key={user._id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.age}</td>
-                  <td>
-                    <Link to={`/update/${user._id}`} className="btn btn-success">Update</Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(user._id)}>Delete</button>
-                  </td>
-                </tr>
-              ))
-            }
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.age}</td>
+                <td>
+                  <Link to={`/update/${user._id}`} className="btn btn-success">Update</Link>
+                  <button className="btn btn-danger" onClick={() => handleDelete(user._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -72,6 +78,6 @@ const User = () => {
       <DeleteModal show={showModal} handleClose={handleCloseModal} handleDelete={handleConfirmDelete} />
     </div>
   );
-}
+};
 
 export default User;
