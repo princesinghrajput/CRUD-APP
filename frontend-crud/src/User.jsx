@@ -9,8 +9,10 @@ const User = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
+    console.log("Effect is running");
     const fetchUsers = async () => {
       try {
+        
         const response = await getUsers();
         setUsers(response.data);
       } catch (error) {
