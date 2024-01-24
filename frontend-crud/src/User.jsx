@@ -38,7 +38,9 @@ const User = () => {
       if (selectedUserId) {
         await deleteUser(selectedUserId);
         console.log("User deleted successfully");
-        window.location.reload();
+  
+        // Update the users state by filtering out the deleted user
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== selectedUserId));
       }
     } catch (error) {
       console.error(error);
@@ -47,6 +49,7 @@ const User = () => {
       setShowModal(false);
     }
   };
+  
 
   return (
     <div className='d-flex vh-100 bg-primary justify-content-center align-item-center'>

@@ -1,8 +1,8 @@
-const UserModel = require('../models/User');
+const userService = require('../services/userServices');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await UserModel.find();
+    const users = await userService.getAllUsers();
     res.json(users);
   } catch (error) {
     res.json(error);
@@ -12,7 +12,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await UserModel.findById(id);
+    const user = await userService.getUserById(id);
     res.json(user);
   } catch (error) {
     console.log(error);
@@ -22,8 +22,9 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const id = req.params.id;
+  const userData = req.body;
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
+    const updatedUser = await userService.updateUser(id, userData);
     res.json(updatedUser);
   } catch (error) {
     console.log(error);
@@ -34,7 +35,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const result = await UserModel.findByIdAndDelete(id);
+    const result = await userService.deleteUser(id);
     res.json(result);
   } catch (error) {
     console.log(error);
@@ -43,8 +44,9 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
+  const userData = req.body;
   try {
-    const newUser = await UserModel.create(req.body);
+    const newUser = await userService.createUser(userData);
     res.json(newUser);
   } catch (error) {
     console.log(error);
