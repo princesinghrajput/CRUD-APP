@@ -30,8 +30,8 @@ Before you begin, ensure you have the following installed:
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/CRUD-App.git
-cd CRUD-App
+git clone https://github.com/princesinghrajput/CRUD-App.git
+cd frontend-crud
 npm install
 cd client
 npm start
