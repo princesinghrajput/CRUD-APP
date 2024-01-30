@@ -6,7 +6,7 @@ const api = axios.create({
     baseURL,
 });
 
-export const getUsers = () => api.get("/");
+export const getUsers = () => api.get("/user");
 export const getUser = (id) => api.get(`/getUser/${id}`);
 export const updateUser = (id, data) => api.put(`/updateUser/${id}`, data);
 export const deleteUser = (id) => api.delete(`/deleteUser/${id}`);
