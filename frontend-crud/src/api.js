@@ -6,6 +6,8 @@ const api = axios.create({
     baseURL,
 });
 
+export const getUserRegister=(userData)=>api.post("/api/user", userData)
+export const getUserLogin=(userData,config)=>api.post("/api/user/login", userData, config)
 export const getUsers = () => api.get("/user");
 export const getUser = (id) => api.get(`/getUser/${id}`);
 export const updateUser = (id, data) => api.put(`/updateUser/${id}`, data);

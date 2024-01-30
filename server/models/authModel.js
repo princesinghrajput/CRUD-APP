@@ -26,7 +26,7 @@ authSchema.methods.matchPassword = async function (enteredPassword) {
 
 authSchema.pre("save", async function (next) {
   if (!this.isModified) {
-    next();````````````````````````````````````````````````````````````
+    next();
   }
 
   const salt = await bcrypt.genSalt(10);

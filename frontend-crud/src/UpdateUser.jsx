@@ -35,7 +35,7 @@ const UpdateUser = () => {
     try {
       await updateUser(id, data);
       console.log('User updated successfully');
-      navigate('/');
+      navigate('/user');
     } catch (error) {
       console.error(error);
     }

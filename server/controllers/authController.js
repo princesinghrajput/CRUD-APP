@@ -3,60 +3,68 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 
 const registerUser = asyncHandler(async (req, res) => {
-    console.log(req.body);
-    const { name, email, password, pic } = req.body;
+  console.log(req.body);
 
-    if (!name || !email || !password) {
-        console.log("Zinda hu bhai");
+  const { name, email, password, pic } = req.body;
 
-        res.status(400).json({ error: "Please enter all fields" });
-        return;
-    }
+  if (!name || !email || !password) {
+    console.log("Zinda hu bhai");
+    return res.status(400).json({ error: "Please enter all fields" });
+  }
 
+  try {
     const userExists = await Auth.findOne({ email });
+
     if (userExists) {
-        res.status(400).json({ error: "User already exists" });
-        return;
+      return res.status(400).json({ error: "User already exists" });
     }
 
     const user = await Auth.create({
-        name,
-        email,
-        password,
-        pic,
+      name,
+      email,
+      password,
+      pic,
     });
 
     if (user) {
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            pic: user.pic,
-            token: generateToken(user._id),
-        });
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        token: generateToken(user._id),
+      });
     } else {
-        res.status(400).json({ error: "Failed to create the user" });
+      return res.status(400).json({ error: "Failed to create the user" });
     }
+  } catch (error) {
+    console.error("Registration Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  console.log("Login Attempt:", email);
 
-const authUser = asyncHandler(async(req, res)=>{
-    const {email, password} = req.body;
+  try {
+    const user = await Auth.findOne({ email });
 
-    const user = await Auth.findOne({email});
-    if(user && (await user.matchPassword(password))){
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            pic: user.pic,
-            token: generateToken(user._id),
-        })
-
+    if (user && (await user.matchPassword(password))) {
+      return res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        token: generateToken(user._id),
+      });
+    } else {
+      return res.status(401).json({ error: "Invalid Email or Password" });
     }
-    else{
-        res.status(401);
-        throw new Error("Invalid Email or Password");
-    }
-})
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = { registerUser, authUser };
