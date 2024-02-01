@@ -13,7 +13,7 @@ const CreateUser = () => {
 
     try {
       await createUser({ name, email, age });
-      navigate('/');
+      navigate('/user');
     } catch (error) {
       console.error(error);
     }
