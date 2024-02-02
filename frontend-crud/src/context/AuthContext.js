@@ -1,37 +1,36 @@
-import { createContext, useReducer, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export const AuthContext = createContext()
+const AuthContext = createContext();
 
-export const authReducer = (state, action) => {
-  switch (action.type) {
-    case 'LOGIN':
-      return { user: action.payload }
-    case 'LOGOUT':
-      return { user: null }
-    default:
-      return state
-  }
-}
+export const AuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Initialize the authentication status from localStorage
+    const storedAuth = localStorage.getItem('isAuthenticated');
+    return storedAuth ? JSON.parse(storedAuth) : false;
+  });
 
-export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { 
-    user: null
-  })
+  const login = () => {
+    setIsAuthenticated(true);
+    // Save the authentication status to localStorage
+    localStorage.setItem('isAuthenticated', JSON.stringify(true));
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    // Remove the authentication status from localStorage
+    localStorage.removeItem('isAuthenticated');
+  };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
+    // Listen for changes in isAuthenticated and update localStorage
+    localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated));
+  }, [isAuthenticated]);
 
-    if (user) {
-      dispatch({ type: 'LOGIN', payload: user }) 
-    }
-  }, [])
-
-  console.log('AuthContext state:', state)
-  
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
-      { children }
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
     </AuthContext.Provider>
-  )
+  );
+};
 
-}
+export const useAuth = () => useContext(AuthContext);
