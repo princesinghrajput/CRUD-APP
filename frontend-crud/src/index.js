@@ -28,7 +28,7 @@ const router = createBrowserRouter(
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
       <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-      <Route path="/reset-password/:id/:token" element={<ResetPassword/>} />
+      <Route path="/reset-password/:token" element={<ResetPassword/>} />
 
       <Route path='' element={<PrivateRoute />}>
         <Route path='/profile' element={<ProfileScreen />} />
